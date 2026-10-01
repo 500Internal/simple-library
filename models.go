@@ -67,3 +67,40 @@ func (r *Reader) AssignBook(book *Book) {
 	fmt.Printf("Читатель %s %s взял книгу %s\n",
 		r.FirstName, r.LastName, book)
 }
+
+func (lib *Library) FindBookByID(id int) (*Book, error) {
+	book, ok := lib.Books[id]
+	if !ok {
+		return nil, fmt.Errorf("книга с ID %d не найдена", id)
+	}
+	return book, nil
+}
+
+func (lib *Library) FindReaderByID(id int) (*Reader, error) {
+	reader, ok := lib.Readers[id]
+	if !ok {
+		return nil, fmt.Errorf("читатель с ID %d не найден", id)
+	}
+	return reader, nil
+}
+
+func (lib *Library) IssueBookToReader(bookID int, readerID int) error {
+	book, err := lib.FindBookByID(bookID)
+	if err != nil {
+		return err
+	}
+
+	reader, err := lib.FindReaderByID(readerID)
+	if err != nil {
+		return err
+	}
+
+	book.IssueBook(reader)
+	return nil
+}
+
+func (lib *Library) ListAllBooks() {
+	for _, book := range lib.Books {
+		fmt.Println(book)
+	}
+}

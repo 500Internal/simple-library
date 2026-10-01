@@ -52,4 +52,48 @@ func main() {
 	for _, n := range notifiers {
 		n.Notify("Ваша книга просрочена!")
 	}
+
+	fmt.Println("---Тестируем выдачу книг---")
+
+	myLibrary := &Library{
+		Books:   make(map[int]*Book),
+		Readers: make(map[int]*Reader),
+	}
+
+	libBookID := 1
+	libReaderID := 1
+
+	libBook := &Book{
+		ID:     libBookID,
+		Title:  "Преступление и наказание",
+		Author: "Ф. М. Достоевский",
+		Year:   1866,
+	}
+	myLibrary.Books[libBookID] = libBook
+
+	libReader := &Reader{
+		ID:        &libReaderID,
+		FirstName: "Анна",
+		LastName:  "Иванова",
+		IsActive:  true,
+	}
+	myLibrary.Readers[libReaderID] = libReader
+
+	err := myLibrary.IssueBookToReader(1, 1)
+	if err != nil {
+		fmt.Println("Ошибка выдачи:", err)
+	}
+
+	book, _ := myLibrary.FindBookByID(1)
+	if book != nil {
+		fmt.Println("Статус книги после выдачи:", book)
+	}
+
+	err = myLibrary.IssueBookToReader(99, 1)
+	if err != nil {
+		fmt.Println("Ожидаемая ошибка:", err)
+	}
+
+	fmt.Println("---Список всех книг в библиотеке---")
+	myLibrary.ListAllBooks()
 }
